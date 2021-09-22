@@ -4,6 +4,7 @@ from django.http.response import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 
 from .forms import PostModelForm
 from blog.models import PostModel
@@ -48,14 +49,10 @@ def post_model_robust_view(req, id=None):
 #@login_required(login_url='/login/')
 def post_model_list_view(req):
     qs = PostModel.objects.all()
-    #print(qs)
-
-    #print(req.GET)  # query dict
-    #query = req.GET['q']
     query = req.GET.get('q')
 
     if query:
-        qs = qs.filter(title__icontains=query)
+        qs = qs.filter(Q(title__icontains=query) | Q(content__icontains=query))
 
     template = "list-view.html"
     context = {"object_list": qs}
