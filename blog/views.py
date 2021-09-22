@@ -25,6 +25,12 @@ def post_model_robust_view(req, id=None):
         context['object'] = obj
         if 'edit' in req.get_full_path():
             template = 'update-view.html'
+        if 'delete' in req.get_full_path():
+            template = 'delete-view.html'
+            if req.method == 'POST':
+                obj.delete()
+                messages.success(req, 'Post Deleted')
+                return HttpResponseRedirect('/blog/')
 
     if 'edit' in req.get_full_path() or 'create' in req.get_full_path():
         form = PostModelForm(req.POST or None, instance=obj)
@@ -35,13 +41,6 @@ def post_model_robust_view(req, id=None):
             if obj is not None:  # updated successfully
                 return HttpResponseRedirect('/blog/{id}'.format()(obj.id))
             context['form'] = PostModelForm()
-
-    if 'delete' in req.get_full_path():
-        template = 'delete-view.html'
-        if req.method == 'POST':
-            obj.delete()
-            messages.success(req, 'Post Deleted')
-            return HttpResponseRedirect('/blog/')
 
     return render(req, template, context)
 
