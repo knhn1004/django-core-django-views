@@ -16,6 +16,10 @@
 		{% endfor %}
 	</ul>
 	{% endif %}
+	<form method="GET" action="/blog/">
+		<input type="text" placeholder="Search" name="q">
+		<input type="submit" value="Search">
+	</form>
 	<h1>Hello World</h1>
 	<ul>
 	{% for post in object_list %}
